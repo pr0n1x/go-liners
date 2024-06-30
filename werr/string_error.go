@@ -2,50 +2,56 @@ package werr
 
 import "fmt"
 
-type StringError string
-
-func (e StringError) Error() string {
-	return string(e)
+func StringError(s string) WrappedError {
+	return &stringError{s: s}
 }
 
-func (e StringError) String() string {
+type stringError struct {
+	s string
+}
+
+func (e *stringError) Error() string {
+	return e.s
+}
+
+func (e *stringError) String() string {
 	return e.Error()
 }
 
-func (e StringError) Wrap() WrappedError {
+func (e *stringError) Wrap() WrappedError {
 	return e
 }
 
 // IMPL WrappedError
 
-func (e StringError) Unwrap() error {
+func (e *stringError) Unwrap() error {
 	return nil
 }
 
-func (e StringError) WithCause(cause error) *ErrorWithCause {
+func (e *stringError) WithCause(cause error) *ErrorWithCause {
 	return NewErrorWithCause(e, cause)
 }
 
-func (e StringError) Prefix(prefix string) *ErrorWithPrefix {
+func (e *stringError) Prefix(prefix string) *ErrorWithPrefix {
 	return NewErrorWithPrefix(prefix, e)
 }
 
-func (e StringError) Prefixf(prefixFormat string, a ...any) *ErrorWithPrefix {
+func (e *stringError) Prefixf(prefixFormat string, a ...any) *ErrorWithPrefix {
 	return NewErrorWithPrefix(fmt.Sprintf(prefixFormat, a...), e)
 }
 
-func (e StringError) Explain(explanation string) *ErrorWithExplanation {
+func (e *stringError) Explain(explanation string) *ErrorWithExplanation {
 	return NewErrorWithExplanation(e, explanation)
 }
 
-func (e StringError) Explainf(format string, a ...any) *ErrorWithExplanation {
+func (e *stringError) Explainf(format string, a ...any) *ErrorWithExplanation {
 	return NewErrorWithExplanationf(e, format, a...)
 }
 
-func (e StringError) WithPayload(payload any) *ErrorWithPayload {
+func (e *stringError) WithPayload(payload any) *ErrorWithPayload {
 	return NewErrorWithPayload(e, payload)
 }
 
-func (e StringError) Format(format string, args ...any) *ErrorFormat {
+func (e *stringError) Format(format string, args ...any) *ErrorFormat {
 	return NewErrorFormat(format, e, args...)
 }
