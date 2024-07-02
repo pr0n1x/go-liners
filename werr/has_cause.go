@@ -15,3 +15,18 @@ func HasCause(err error, target error) bool {
 		}
 	}
 }
+
+func AsCause(err error, target any) bool {
+	cause := err
+	for {
+		if //goland:noinspection GoErrorsAs
+		errors.As(cause, target) {
+			return true
+		}
+		if x, ok := cause.(interface{ Cause() error }); ok {
+			cause = x.Cause()
+		} else {
+			return false
+		}
+	}
+}
