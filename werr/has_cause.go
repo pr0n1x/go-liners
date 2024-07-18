@@ -3,30 +3,46 @@ package werr
 import "errors"
 
 func HasCause(err error, target error) bool {
-	cause := err
+	current := err
 	for {
-		if errors.Is(cause, target) {
+		if errors.Is(current, target) {
 			return true
 		}
-		if x, ok := cause.(interface{ Cause() error }); ok {
+		var cause error = nil
+		if x, ok := current.(interface{ Cause() error }); ok {
 			cause = x.Cause()
-		} else {
-			return false
 		}
+		if cause == nil {
+			if x, ok := current.(interface{ Unwrap() error }); ok {
+				current = x.Unwrap()
+				continue
+			} else {
+				return false
+			}
+		}
+		current = cause
 	}
 }
 
 func AsCause(err error, target any) bool {
-	cause := err
+	current := err
 	for {
 		if //goland:noinspection GoErrorsAs
-		errors.As(cause, target) {
+		errors.As(current, target) {
 			return true
 		}
-		if x, ok := cause.(interface{ Cause() error }); ok {
+		var cause error = nil
+		if x, ok := current.(interface{ Cause() error }); ok {
 			cause = x.Cause()
-		} else {
-			return false
 		}
+		if cause == nil {
+			if x, ok := current.(interface{ Unwrap() error }); ok {
+				current = x.Unwrap()
+				continue
+			} else {
+				return false
+			}
+		}
+		current = cause
 	}
 }

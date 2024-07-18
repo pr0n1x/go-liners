@@ -1,6 +1,9 @@
 package rs
 
-import "errors"
+import (
+	"encoding/json"
+	"errors"
+)
 
 var ErrUnwrappingOptionNoneValue = errors.New("unwrapping Option::None value")
 
@@ -58,4 +61,20 @@ func OptionToString[S interface{ String() string }](opt Option[S]) string {
 		return s.Some.String()
 	}
 	return "None"
+}
+
+type StringableOption[T interface{ String() string }] struct {
+	Option[T]
+}
+
+func (o StringableOption[T]) String() string {
+	return OptionToString(o.Option)
+}
+
+func (o Some[T]) MarshalJSON() ([]byte, error) {
+	return json.Marshal(o.Some)
+}
+
+func (o None[T]) MarshalJSON() ([]byte, error) {
+	return []byte("null"), nil
 }
