@@ -1,4 +1,4 @@
-module gitlab.com/pr0n1x/go-type-wrappers
+module github.com/pr0n1x/go-type-wrappers
 
 go 1.21
 
