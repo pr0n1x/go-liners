@@ -59,6 +59,13 @@ func CtxLogger(ctx context.Context) Logger {
 	return ZeroLogger{}
 }
 
+func CtxNonZeroLogger(ctx context.Context) (bool, Logger) {
+	if v, ok := ctx.Value(CtxKeyLogger).(ContextValueLogger); ok {
+		return true, v.Logger
+	}
+	return false, ZeroLogger{}
+}
+
 func WithLogger(ctx context.Context, logger Logger) context.Context {
 	return context.WithValue(ctx, CtxKeyLogger, ContextValueLogger{Logger: logger})
 }
