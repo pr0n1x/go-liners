@@ -6,24 +6,29 @@ import (
 )
 
 type ErrorCollection struct {
+	sep  string
 	errs []error
 }
 
-func CollectErrors(errs []error) *ErrorCollection {
+func CollectErrors(errs []error, sep ...string) *ErrorCollection {
 	if len(errs) < 1 {
 		return nil
 	}
-	res := []error(nil)
+	errList := []error(nil)
 	for _, err := range errs {
 		if err == nil {
 			continue
 		}
-		res = append(res, err)
+		errList = append(errList, err)
 	}
-	if len(res) < 1 {
+	if len(errList) < 1 {
 		return nil
 	}
-	return &ErrorCollection{errs: res}
+	res := ErrorCollection{errs: errList, sep: "\n"}
+	if len(sep) > 0 && sep[0] != "" {
+		res.sep = sep[0]
+	}
+	return &res
 }
 
 func (e *ErrorCollection) Error() (res string) {

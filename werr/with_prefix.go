@@ -15,6 +15,15 @@ func NewErrorWithPrefix(prefix string, err error) *ErrorWithPrefix {
 }
 
 func (e *ErrorWithPrefix) Error() string {
+	if len(e.prefix) > 0 {
+		lastSymbol := e.prefix[len(e.prefix)-1:]
+		if lastSymbol == "\n" {
+			return fmt.Sprintf("%s%s", e.prefix, e.err.Error())
+		}
+		if lastSymbol == ":" {
+			return fmt.Sprintf("%s %s", e.prefix, e.err.Error())
+		}
+	}
 	return fmt.Sprintf("%s: %s", e.prefix, e.err.Error())
 }
 
