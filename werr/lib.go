@@ -31,9 +31,9 @@ func Wrap(err error) WrappedError {
 }
 
 func New(s string) WrappedError {
-	return StringError(s)
+	return NewStringError(s)
 }
 
 func Errorf(format string, args ...any) WrappedError {
-	return StringError(fmt.Sprintf(format, args...))
+	return NewStringError(fmt.Sprintf(format, args...))
 }

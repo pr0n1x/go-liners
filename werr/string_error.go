@@ -2,56 +2,56 @@ package werr
 
 import "fmt"
 
-func StringError(s string) WrappedError {
-	return &stringError{s: s}
+func NewStringError(s string) *StringError {
+	return &StringError{s: s}
 }
 
-type stringError struct {
+type StringError struct {
 	s string
 }
 
-func (e *stringError) Error() string {
+func (e *StringError) Error() string {
 	return e.s
 }
 
-func (e *stringError) String() string {
+func (e *StringError) String() string {
 	return e.Error()
 }
 
-func (e *stringError) Wrap() WrappedError {
+func (e *StringError) Wrap() WrappedError {
 	return e
 }
 
 // IMPL WrappedError
 
-func (e *stringError) Unwrap() error {
+func (e *StringError) Unwrap() error {
 	return nil
 }
 
-func (e *stringError) WithCause(cause error) *ErrorWithCause {
+func (e *StringError) WithCause(cause error) *ErrorWithCause {
 	return NewErrorWithCause(e, cause)
 }
 
-func (e *stringError) Prefix(prefix string) *ErrorWithPrefix {
+func (e *StringError) Prefix(prefix string) *ErrorWithPrefix {
 	return NewErrorWithPrefix(prefix, e)
 }
 
-func (e *stringError) Prefixf(prefixFormat string, a ...any) *ErrorWithPrefix {
+func (e *StringError) Prefixf(prefixFormat string, a ...any) *ErrorWithPrefix {
 	return NewErrorWithPrefix(fmt.Sprintf(prefixFormat, a...), e)
 }
 
-func (e *stringError) Explain(explanation string) *ErrorWithExplanation {
+func (e *StringError) Explain(explanation string) *ErrorWithExplanation {
 	return NewErrorWithExplanation(e, explanation)
 }
 
-func (e *stringError) Explainf(format string, a ...any) *ErrorWithExplanation {
+func (e *StringError) Explainf(format string, a ...any) *ErrorWithExplanation {
 	return NewErrorWithExplanationf(e, format, a...)
 }
 
-func (e *stringError) WithPayload(payload any) *ErrorWithPayload {
+func (e *StringError) WithPayload(payload any) *ErrorWithPayload {
 	return NewErrorWithPayload(e, payload)
 }
 
-func (e *stringError) Format(format string, args ...any) *ErrorFormat {
+func (e *StringError) Format(format string, args ...any) *ErrorFormat {
 	return NewErrorFormat(format, e, args...)
 }

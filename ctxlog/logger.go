@@ -46,26 +46,26 @@ func (l ZeroLogger) Panicf(_ string, _ ...any)    {}
 
 type ContextKey string
 
-const CtxKeyLogger ContextKey = "logger"
+const CtxKeyLogger ContextKey = "ctxlog.logger"
 
-type ContextValueLogger struct {
-	Logger
+type loggerCtxWrapper struct {
+	l Logger
 }
 
 func CtxLogger(ctx context.Context) Logger {
-	if v, ok := ctx.Value(CtxKeyLogger).(ContextValueLogger); ok {
-		return v.Logger
+	if v, ok := ctx.Value(CtxKeyLogger).(loggerCtxWrapper); ok {
+		return v.l
 	}
 	return ZeroLogger{}
 }
 
 func CtxNonZeroLogger(ctx context.Context) (bool, Logger) {
-	if v, ok := ctx.Value(CtxKeyLogger).(ContextValueLogger); ok {
-		return true, v.Logger
+	if v, ok := ctx.Value(CtxKeyLogger).(loggerCtxWrapper); ok {
+		return true, v.l
 	}
 	return false, ZeroLogger{}
 }
 
 func WithLogger(ctx context.Context, logger Logger) context.Context {
-	return context.WithValue(ctx, CtxKeyLogger, ContextValueLogger{Logger: logger})
+	return context.WithValue(ctx, CtxKeyLogger, loggerCtxWrapper{l: logger})
 }
