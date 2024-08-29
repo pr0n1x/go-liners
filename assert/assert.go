@@ -1,12 +1,40 @@
-package rs
+package assert
 
 import "fmt"
 
-func Must[T any](t T, err error) T {
+func Ok[T any](v T, ok bool) T {
+	if !ok {
+		panic("it's not ok")
+	}
+	return v
+}
+
+func Ok2[A any, B any](a A, b B, ok bool) (A, B) {
+	if !ok {
+		panic("it's not ok")
+	}
+	return a, b
+}
+
+func Must[T any](v T, err error) T {
 	if err != nil {
 		panic(err)
 	}
-	return t
+	return v
+}
+
+func Must2[A any, B any](a A, b B, err error) (A, B) {
+	if err != nil {
+		panic(err)
+	}
+	return a, b
+}
+
+func Must3[A any, B any, C any](a A, b B, c C, err error) (A, B, C) {
+	if err != nil {
+		panic(err)
+	}
+	return a, b, c
 }
 
 func Trust(err error, msg ...string) {
@@ -47,7 +75,7 @@ func NotEmptyMap[M ~map[K]V, K comparable, V any](m M, msg ...string) M {
 	return m
 }
 
-func NotZero[N Number](n N, msg ...string) N {
+func NotZero[N number](n N, msg ...string) N {
 	if n == 0 {
 		if len(msg) > 0 {
 			panic(msg[0])
@@ -57,14 +85,12 @@ func NotZero[N Number](n N, msg ...string) N {
 	return n
 }
 
-func LogIfErr(err error, msg ...string) bool {
-	if err != nil {
-		if len(msg) > 0 {
-			fmt.Printf("%s: %s\n", msg[0], err.Error())
-		} else {
-			fmt.Println(err.Error())
-		}
-		return true
-	}
-	return false
+type integer interface {
+	~int | ~int8 | ~int16 | ~int32 | ~int64 | ~uint | ~uint8 | ~uint16 | ~uint32 | ~uint64
 }
+
+type float interface {
+	~float32 | ~float64
+}
+
+type number interface{ integer | float }
