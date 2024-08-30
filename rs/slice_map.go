@@ -1,6 +1,6 @@
 package rs
 
-type IndexedValue[I Index, T any] struct {
+type IndexedValue[I Integer, T any] struct {
 	Index I
 	Value T
 }
@@ -35,13 +35,11 @@ func Filter[S ~[]T, T any](s S, predicate func(int, T) bool) (res []T) {
 	return res
 }
 
-func FilterMap[S ~[]F, F any, T any](s S, predicate func(int, F, *T) bool) (res []T) {
+func FilterMap[S ~[]F, F any, T any](s S, predicate func(int, F) *T) (res []T) {
 	res = nil
-	var buf T
 	for k, v := range s {
-		if predicate(k, v, &buf) {
-			t := buf
-			res = append(res, t)
+		if to := predicate(k, v); to != nil {
+			res = append(res, *to)
 		}
 	}
 	return res
