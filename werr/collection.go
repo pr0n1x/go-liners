@@ -39,7 +39,7 @@ func (e *Collection) Error() (res string) {
 	for i, err := range e.errs {
 		msgs[i] = err.Error()
 	}
-	return strings.Join(msgs, "\n")
+	return strings.Join(msgs, e.sep)
 }
 
 func (e *Collection) Empty() bool {
