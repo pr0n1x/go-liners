@@ -2,7 +2,7 @@ package rs
 
 import (
 	"encoding/json"
-	"github.com/pr0n1x/go-type-wrappers/assert"
+	"github.com/pr0n1x/go-liners/assert"
 	"testing"
 )
 
